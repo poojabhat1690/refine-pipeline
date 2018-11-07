@@ -16,25 +16,24 @@ The following dependencies that have to be installed.
 
 ## Quickstart
 
-		Please make sure to download annotations and format them before running this script. 
+Please make sure to download annotations and format them before running this script. 
+The script required to run the whole pipeline is beforeMapping.new.sh
 
-		The script required to run the whole pipeline is beforeMapping.new.sh
-
-beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g genome file] [-t threshold for priming sites]
-[-u ucscDir] [-e ensemblDir] [-m mode rnadeq p/s/S] [-c condition]
+beforeMapping.new.sh -a adapter -i input directory -o output directory -g genome file -t threshold for priming sites
+-u ucscDir -e ensemblDir -m mode rnaseq p/s/S -c condition
  
  
- 		-a 3' adapter sequences that has to be removed using cutadapt
-                -i input directory containing two folders named - quantseq, rnaseq
+ -a 3' adapter sequences that has to be removed using cutadapt
+ -i input directory containing two folders named - quantseq, rnaseq
                    quantseq: contains *.fastq, *.fq.gz, *fq  files. 
                    rnaseq: mapped, sorted and indexed bam files. 
-                -o Output directory
-                -t threshold of the number of reads to define a priming site.
-                -u ucsc directory containing annotations downloaded from ucsc table browser. 
-                -e ensembl directory containing ensembl annotations ontained from biomart. 
-                -m mode of counting for RNAseq coverage, derived from bedtools multicov (s: counting on the same strand, 
-                        p: paired end reads, S: counting on the opposite strand)
-                -c condition of sample (example: timepoint or organism)
+ -o Output directory
+ -t threshold of the number of reads to define a priming site.
+ -u ucsc directory containing annotations downloaded from ucsc table browser. 
+ -e ensembl directory containing ensembl annotations ontained from biomart. 
+ -m mode of counting for RNAseq coverage, derived from bedtools multicov (s: counting on the same strand, 
+            p: paired end reads, S: counting on the opposite strand
+ -c condition of sample (example: timepoint or organism)
                 
            
  ## Prerequisites: 
@@ -48,8 +47,8 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
     for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
     
             1. Form UCSC table browser, select:
-                a. clade = mammal 
-                b. genome = mouse
+                * clade = mammal 
+                *. genome = mouse
                 c. assembly = Dec. 2011 (GRCm38/mm10)
                 d. group = genes and gene prediction
                 e. track = refSeq genes
