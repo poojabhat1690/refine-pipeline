@@ -106,4 +106,11 @@ processing ensembl annotations
 	
 
  
+## Output description
+The ouput and all intermediate files are organized in the follwing folders:
+
+1. polyAmapping_allTimepoints : contains raw files of the pre-processing steps, including adapter trimmed, poly(A) tail filtered fastq files, mapped files, priming sites, priming sites overalapping with different annotations (ENSEMBL 3' UTRs, refSeq 3' UTRs, ENSEMBL introns, ENSEMBL exons, nonOverlapping). 
+2. PASplots - contains nucleotide profiles for priming sites overlapping with annotations, sparated by presence or absence of the poly A signal (PAS) and separated by downstream genomic A content. 
+
+
 
