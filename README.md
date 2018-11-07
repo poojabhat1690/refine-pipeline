@@ -47,8 +47,8 @@ beforeMapping.new.sh -a adapter -i input directory -o output directory -g genome
     for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
     
             1. Form UCSC table browser, select:
-                * clade = mammal 
-                *. genome = mouse
+                a. clade = mammal 
+                b. genome = mouse
                 c. assembly = Dec. 2011 (GRCm38/mm10)
                 d. group = genes and gene prediction
                 e. track = refSeq genes
