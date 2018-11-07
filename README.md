@@ -9,10 +9,10 @@ git clone https://github.com/poojabhat1690/refine-pipeline.git
 cd pipeline/pre-processing/
 
 The following dependencies that have to be installed. 
-	cutadapt
-	bedtools
-	python
-	R
+	1.cutadapt
+	2.bedtools
+	3.python
+	4.R
 
 Quickstart
 
@@ -40,8 +40,11 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
  
  
  1. Annotations from refSeq, downloaded from the UCSC table browser. 
-    #################################################
-    for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed)
+ 
+ 
+ As an example, taking the mm10 annotation (the refSeq annotations were downloaded manually and processed) : File name: getAnnotations.Rmd
+ #################################################
+    for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
     #################################################
 
             1. Form UCSC table browser, select:
