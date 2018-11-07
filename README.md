@@ -88,7 +88,7 @@ beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g 
               e. track = refSeq genes
               f. table = refFlat
             2. select bed format and 3' UTR. 
-further processing has been done in the script : getAnnotations.Rmd
+further processing has been done in the script : pipeline/pre-processing/getAnnotations.Rmd
      
 1. assign gene names of refSeq annotations from refFlat annotations - this is done based on the chromosome, start and end positions, only retain annotations of main chromosomes (1:19,X,y)
 2. separate refSeq mRNA annotations (id : "NM...") and non-coding RNA annotations (id : NR...) - refSeq_mrna_utrsPresent.txt,  refSeq_ncrna_utrsPresent.txt
@@ -98,7 +98,7 @@ further processing has been done in the script : getAnnotations.Rmd
 
  2. Annotations from ENSEMBL retreived from biomaRt
  
-Ensembl annotations were retrieved from biomart, using RStudio using the script getAnnotations.Rmd
+Ensembl annotations were retrieved from biomart, using RStudio using the script pipeline/pre-processing/getAnnotations.Rmd
 processing ensembl annotations 
 1. get only protein coding genes based on transcript biotype : allTranscripts_proteinCoding.txtonly the main chromosomes are retained.
 2. get protein coding genes with annotated 3' UTRs : proteinCoding_annotatedUTRs.txt
