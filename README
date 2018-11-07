@@ -27,6 +27,10 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
                 -t threshold of the number of reads to define a priming site.
                 -u ucsc directory containing annotations downloaded from ucsc table browser. 
                 -e ensembl directory containing ensembl annotations ontained from biomart. 
-                -m mode of counting for RNAseq coverage, derived from bedtools 
+                -m mode of counting for RNAseq coverage, derived from bedtools multicov (s: counting on the same strand, 
+                        p: paired end reads, S: counting on the opposite strand)
+                -c condition of sample (example: timepoint or organism)
+                
+           
                    
 
