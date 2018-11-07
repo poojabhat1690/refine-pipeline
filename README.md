@@ -16,13 +16,15 @@ The following dependencies that have to be installed.
 
 Quickstart
 
-	Please make sure to download annotations and format them before running this script. 
+		Please make sure to download annotations and format them before running this script. 
 
-	The script required to run the whole pipeline is beforeMapping.new.sh
+		The script required to run the whole pipeline is beforeMapping.new.sh
 
 beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g genome file] [-t threshold for priming sites]
 [-u ucscDir] [-e ensemblDir] [-m mode rnadeq p/s/S] [-c condition]
-                -a 3' adapter sequences that has to be removed using cutadapt
+ 
+ 
+ 		-a 3' adapter sequences that has to be removed using cutadapt
                 -i input directory containing two folders named - quantseq, rnaseq
                    quantseq: contains *.fastq, *.fq.gz, *fq  files. 
                    rnaseq: mapped, sorted and indexed bam files. 
@@ -43,10 +45,8 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
  
  
  As an example, taking the mm10 annotation (the refSeq annotations were downloaded manually and processed) : File name: getAnnotations.Rmd
- #################################################
     for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
-    #################################################
-
+    
             1. Form UCSC table browser, select:
                 a. clade = mammal 
                 b. genome = mouse
@@ -56,10 +56,8 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
                 f. table = refGene
               2. select bed format and 3' UTR. 
               
-       ################################################	
        for intron annotations from UCSC table browser (refSeq_mm10_intronAnnotations.bed)
-       ################################################
-
+     
           	1. Form UCSC table browser, select:
               a. clade = mammal 
               b. genome = mouse
@@ -69,10 +67,8 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
               f. table = refGene
             2. select bed format and intron. 
 
-      #################################################	
       for exon annotations from UCSC table browser (refSeq_mm10_exonAnnotations.bed)
-      #################################################
-
+     
             1. Form UCSC table browser, select:
               a. clade = mammal 
               b. genome = mouse
@@ -82,9 +78,8 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
               f. table = refGene
             2. select bed format and exon. 
 
-      ##################################################
       refFlat annotations from the UCSC genome browser 
-      ##################################################
+     
 	
             1. Form UCSC table browser, select:
               a. clade = mammal 
