@@ -1,9 +1,0 @@
-######### another attempt to classify purely maternal, purely zygotic and Maternal + zygotic transcripts... 
-
-
-##### firstly looking at purely zygotic transcripts... 
-### reading in the RPMs of counted samples...
-
-
-RPMs_all = read.table("/Volumes/groups/ameres/Pooja/Projects/zebrafishAnnotation/sequencingRun_december2017/analysis/microsymosium2018/data/RPMData.txt",sep="\t",stringsAsFactors = F,header=T)
-conversionRates_all = read.table("/Volumes/groups/ameres/Pooja/Projects/zebrafishAnnotation/sequencingRun_december2017/analysis/microsymosium2018/data/TCConversionRate.txt",sep="\t",stringsAsFactors = F,header=T)
