@@ -1,14 +1,14 @@
 Annotation pipeline
 
-	This is a set of scripts used to refine and extend existing mRNA 3' end annotations using Quant seq 3' end sequencing 	 (https://www.nature.com/articles/nmeth.f.376) and RNAseq. 
+This is a set of scripts used to refine and extend existing mRNA 3' end annotations using Quant seq 3' end sequencing 	 (https://www.nature.com/articles/nmeth.f.376) and RNAseq. 
 
 Installation
 
-	Clone from github
-	git clone https://github.com/poojabhat1690/refine-pipeline.git
-	cd pipeline/pre-processing/
+Clone from github
+git clone https://github.com/poojabhat1690/refine-pipeline.git
+cd pipeline/pre-processing/
 
-	The following dependencies that have to be installed. 
+The following dependencies that have to be installed. 
 	cutadapt
 	bedtools
 	python
