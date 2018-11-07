@@ -89,9 +89,9 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
               e. track = refSeq genes
               f. table = refFlat
             2. select bed format and 3' UTR. 
-### further processing has been done in the script : getAnnotations.Rmd
+further processing has been done in the script : getAnnotations.Rmd
      
-	1. assign gene names of refSeq annotations from refFlat annotations - this is done based on the chromosome, start and end positions, only retain annotations of main chromosomes (1:19,X,y)
+     1. assign gene names of refSeq annotations from refFlat annotations - this is done based on the chromosome, start and end positions, only retain annotations of main chromosomes (1:19,X,y)
 	2. separate refSeq mRNA annotations (id : "NM...") and non-coding RNA annotations (id : NR...) - refSeq_mrna_utrsPresent.txt,  refSeq_ncrna_utrsPresent.txt
 	3. Get the transcript annotations and check which transcripts do not have an annotated 3' UTR. - refSeqGenesWithoutUTRs.txt
 	
