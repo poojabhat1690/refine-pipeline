@@ -9,10 +9,10 @@ git clone https://github.com/poojabhat1690/refine-pipeline.git
 cd pipeline/pre-processing/
 
 The following dependencies that have to be installed. 
-			1.cutadapt
-			2.bedtools
-			3.python
-			4.R
+			1. cutadapt
+			2. bedtools
+			3. python
+			4. R
 
 ## Quickstart
 
