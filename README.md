@@ -1,8 +1,8 @@
-Annotation pipeline
+# Annotation pipeline
 
 This is a set of scripts used to refine and extend existing mRNA 3' end annotations using Quant seq 3' end sequencing 	 (https://www.nature.com/articles/nmeth.f.376) and RNAseq. 
 
-Installation
+## Installation
 
 Clone from github
 git clone https://github.com/poojabhat1690/refine-pipeline.git
@@ -14,7 +14,7 @@ The following dependencies that have to be installed.
 	3.python
 	4.R
 
-Quickstart
+## Quickstart
 
 		Please make sure to download annotations and format them before running this script. 
 
@@ -37,7 +37,7 @@ beforeMapping.new.sh [-a adapter] [-i input directory] [-o output directory] [-g
                 -c condition of sample (example: timepoint or organism)
                 
            
- Prerequisites: 
+ ## Prerequisites: 
  
  
  
