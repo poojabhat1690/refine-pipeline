@@ -88,7 +88,7 @@ beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g 
               e. track = refSeq genes
               f. table = refFlat
             2. select bed format and 3' UTR. 
-further processing has been done in the script : getAnnotations.Rmd
+further processing has been done in the script : pipeline/pre-processing/getAnnotations.Rmd
      
 1. assign gene names of refSeq annotations from refFlat annotations - this is done based on the chromosome, start and end positions, only retain annotations of main chromosomes (1:19,X,y)
 2. separate refSeq mRNA annotations (id : "NM...") and non-coding RNA annotations (id : NR...) - refSeq_mrna_utrsPresent.txt,  refSeq_ncrna_utrsPresent.txt
@@ -98,7 +98,7 @@ further processing has been done in the script : getAnnotations.Rmd
 
  2. Annotations from ENSEMBL retreived from biomaRt
  
-Ensembl annotations were retrieved from biomart, using RStudio using the script getAnnotations.Rmd
+Ensembl annotations were retrieved from biomart, using RStudio using the script pipeline/pre-processing/getAnnotations.Rmd
 processing ensembl annotations 
 1. get only protein coding genes based on transcript biotype : allTranscripts_proteinCoding.txtonly the main chromosomes are retained.
 2. get protein coding genes with annotated 3' UTRs : proteinCoding_annotatedUTRs.txt
@@ -106,4 +106,19 @@ processing ensembl annotations
 	
 
  
+## Output description
+The ouput and all intermediate files are organized in the follwing folders:
+
+1. polyAmapping_allTimepoints : contains raw files of the pre-processing steps, including adapter trimmed, poly(A) tail filtered fastq files, mapped files, priming sites, priming sites overalapping with different annotations (ENSEMBL 3' UTRs, refSeq 3' UTRs, ENSEMBL introns, ENSEMBL exons, nonOverlapping). 
+2. PASplots - contains nucleotide profiles for priming sites overlapping with annotations, sparated by presence or absence of the poly A signal (PAS) and separated by downstream genomic A content. 
+3. coverage : contains list of priming sites (filterd for low genomic A content), that overlap with un-annotated regions supported by RNAseq. 
+4. final90percent :
+	ends_greater90percent_intergenic_n100 :  contains the high condience mRNA 3' ends 
+	allAnnotations.bed :  250nt counting windows (overlapping counting windows merged), used to count quantSeq reads.
+	countingWindows_transcriptionalOutput.bed : genomic loci to filter multimappers using SLAMdunk. These include all counting windows + all 3' UTRs + all extended counting windows. 
+	onlyIntergenic_90percent_n100: list of the intergenic counting windows created using presence of continuous RNAseq signal.
+	
+	
+
+
 
