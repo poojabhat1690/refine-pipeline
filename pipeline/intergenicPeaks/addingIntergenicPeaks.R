@@ -37,12 +37,12 @@ customAnnotation = rbind(customAnnotation_plus,customAnnotation_minus)
 write.table(customAnnotationIntoUTR,paste0(BOut, "/ExtendingINtergenicRegions/customAnnotation_longestTranscripts_100IntoUTR.bed"),sep="\t",quote = F,row.names = F,col.names = F)
 
 cat("this works")
-counts_inUTR100 = system(paste0(" bedtools multicov -split -", mode ," -bams " , BIn, "/rnaseq/*.bam -bed ", BOut, "/ExtendingINtergenicRegions/customAnnotation_longestTranscripts_100IntoUTR.bed"),intern=T)
+counts_inUTR100 = system(paste0(" bedtools multicov -split -", mode ," -bams " , BIn, "/rnaseq/*modified.bam -bed ", BOut, "/ExtendingINtergenicRegions/customAnnotation_longestTranscripts_100IntoUTR.bed"),intern=T)
 
 write.table(counts_inUTR100,paste0(BOut, "/coverage/customAnnotation_longestTranscripts_IntoUTR_coverage_",args[1],"_",args[2],".bed"),quote = F,row.names = F,col.names = F)
 
 counts_inUTR100 = read.table(paste0(BOut, "/coverage/customAnnotation_longestTranscripts_IntoUTR_coverage_",args[1],"_",args[2],".bed"),sep="\t")
-counts_inUTR100_counts = counts_inUTR100[,c(9:ncol(counts_inUTR100))]
+counts_inUTR100_counts = data.frame(counts_inUTR100[,c(9:ncol(counts_inUTR100))])
 
 numReplicates <- length(9:ncol(counts_inUTR100))
 if(ncol(counts_inUTR100)==9){
@@ -132,7 +132,7 @@ for(i in 1:nrow(thresholds)){
   ### calculating RNAseq signal in the offset refion
     ### -S is used as mapping of this RNAseq sample as reads were not reverse-complemented before mapping.
 
-  counts_offSet = system(paste0("bedtools  multicov -split -", mode ," -bams ", BIn, "/rnaseq/*.bam -bed ", BOut, "/coverage/customAnnotation_longestTranscripts_tmp_downstream.bed"),intern = T)
+  counts_offSet = system(paste0("bedtools  multicov -split -", mode ," -bams ", BIn, "/rnaseq/*modified.bam -bed ", BOut, "/coverage/customAnnotation_longestTranscripts_tmp_downstream.bed"),intern = T)
   write.table(counts_offSet,outFile,quote = F,row.names = F,col.names = F,sep="\t")
 
   counts_offSet = read.table(outFile,sep="\t")
