@@ -2,15 +2,13 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 ##SBATCH --cpus-per-task=7
-#SBATCH --mem-per-cpu=150G
-#SBATCH --time=0-8:00:00     # 2 minutes
-#SBATCH --output=/scratch/pooja/runSLAMdunk
+#SBATCH --mem-per-cpu=20G
+#SBATCH --time=0-24:00:00     # 2 minutes
 #SBATCH --job-name=runSLAMdunk
 ####SBATCH --array=1-4
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=pooja.bhat@imba.oeaw.ac.at
-
-
+#SBATCH  --qos=long
 
 
 PIPELINE=/groups/ameres/Pooja/Projects/refiningPipeline/pipeline/
@@ -21,7 +19,7 @@ PIPELINE=/groups/ameres/Pooja/Projects/refiningPipeline/pipeline/
 
 ### reading in the variables passed in the command line... 
 
-while getopts 'a: i: o: g: t:' OPTION; do
+while getopts 'a: i: o: g: t: u: e: m: c:' OPTION; do
 	  case "$OPTION" in
 		      a)
 			      avalue="$OPTARG"
@@ -49,8 +47,25 @@ while getopts 'a: i: o: g: t:' OPTION; do
 								echo "the threshold to consider priming sites is $OPTARG"
 								;;
 
+							u) 
+								ucscdir="$OPTARG"
+								echo "the ucsc directory specified is $OPTARG"
+								;;
+							e)
+								ensembldir="$OPTARG"
+								echo "the ensembl directory specified is $OPTARG"
+								;;
+							m)
+								RNAseqMode="$OPTARG"
+								echo "the rnaseq mode is $OPTARG"
+								;;
+							c)
+								Condition="$OPTARG"
+								echo "the condition is $OPTARG"
+								;;
+
 					  			  ?)
-										 echo "script usage: $(basename $0) [-a adapter] [-i input directory] [-o output directory] [-g genome file] [-t threshold for priming sites]" >&2
+										 echo "script usage: $(basename $0) [-a adapter] [-i input directory] [-o output directory] [-g genome file] [-t threshold for priming sites] [-u ucscDir] [-e ensemblDir] [-m mode rnadeq p/s/S] [-c condition]" >&2
 														        exit 1
 															      ;;
 															        esac
@@ -93,10 +108,31 @@ fi
 	### quantseq - containing all the zipped files of the quantSeq data
 	### rnaseq - containing all the rnaseq data for the condition, mapeed and indexed. 
 
+
+
+
+	################ adding some R packages to a private library (creatied according to the following):https://thecoatlessprofessor.com/programming/working-with-r-on-a-cluster/
+
+	### the R library has been modified to ~/Rlibs
+	
+	### the following packages are downloaded
+
+	# Rscript -e "install.packages('devtools', '~/Rlibs', 'http://ftp.ussg.iu.edu/CRAN/')"
+	#
+
+
+	
 QUANT_ALIGN=$ovalue/polyAmapping_allTimepoints
 QUANT_MAP=$ovalue/polyAmapping_allTimepoints/n_100_global_a0/
+QUANT_PASPLOTS=$ovalue/PASplot
+QUANT_INTERGENIC=$ovalue/intergenicPeaks
+
 mkdir -p "$QUANT_ALIGN"
 mkdir -p "$QUANT_MAP"
+mkdir -p "$QUANT_PASPLOTS"
+mkdir -p "$QUANT_INTERGENIC"
+mkdir -p $ovalue/ExtendingINtergenicRegions
+mkdir -p $ovalue/coverage
 
 ls "$ivalue"/quantseq/*.{gz,fastq,fq} | perl -pe "s#$ivalue/quantseq/##" > $QUANT_ALIGN/sampleInfo.txt
 
@@ -145,7 +181,7 @@ module load cutadapt/1.9.1-foss-2017a-python-2.7.13
 module load fastx-toolkit/0.0.14-foss-2017a
 module load fastqc/0.11.5-java-1.8.0_121
 module load anaconda2/5.1.0
-module load bedtools/2.27.1-foss-2017a
+module load  bedtools/2.25.0-foss-2017a
 module load r/3.4.1-foss-2017a-x11-20170314
 
 
@@ -159,7 +195,7 @@ while read index; do
   
 	  ### trimming adapter and adding the relavant information. 
 
-  	#######cutadapt -a $avalue -o "$OUTDIR"/"$index"_trimmed.fastq  --trim-n $INPUT/"$index" 2>"$LOG"/stderr_"$index".txt 1>>"$LOG"/stdo_"$index".txt
+  	cutadapt -a $avalue -o "$OUTDIR"/"$index"_trimmed.fastq  --trim-n $INPUT/"$index" 2>"$LOG"/stderr_"$index".txt 1>>"$LOG"/stdo_"$index".txt
   	
 	adapterTrimming=$(cat  "$OUTDIR"/"$index"_trimmed.fastq | echo $((`wc -l`/4)))
   	echo the number of reads after adapter trimming is "$adapterTrimming" >>"$LOG"/stdo_"$index".txt
@@ -172,14 +208,16 @@ while read index; do
 
 	### QC  
 	
-	#module load fastqc/0.11.5-java-1.8.0_121
-	#fastqc "$OUTDIR"/"$index"_trimmed.fastq 
+	module load fastqc/0.11.5-java-1.8.0_121
+	fastqc "$OUTDIR"/"$index"_trimmed.fastq 
 	
 	### trimming from the 5' end....
 
 	echo fastx_trimmer to remove 12 nts from the 5 end of the reads >>"$LOG"/stdo_"$index".txt  
 	echo version of fastx_trimmer used is Version: `which fastx_trimmer` >>"$LOG"/stdo_"$index".txt
-	###### fastx_trimmer -Q33 -f 13 -m 1 -i "$OUTDIR"/"$index"_trimmed_emptyRemoved.fastq   > "$OUTDIR"/"$index"_5primetrimmed_trimmed.fastq 2>"$LOG"/stderr_"$index".txt 
+	
+	fastx_trimmer -Q33 -f 13 -m 1 -i "$OUTDIR"/"$index"_trimmed_emptyRemoved.fastq   > "$OUTDIR"/"$index"_5primetrimmed_trimmed.fastq 2>"$LOG"/stderr_"$index".txt 
+	
 	fivePrimeTrimmed=$(cat  "$OUTDIR"/"$index"_5primetrimmed_trimmed.fastq | echo $((`wc -l`/4)))                                                                                    
 	echo number of reads after 5 trimmig "$fivePrimeTrimmed" >>"$LOG"/stdo_"$index".txt
 	echo "retaining reads that have >=5 As the the 3 end" >>"$LOG"/stdo_"$index".txt
@@ -188,14 +226,16 @@ while read index; do
 	#### removing A's from the 3' end
 
 	#AAAAA$ could theoretically also happen in PHRED score
+	
 	egrep -A2 -B1 'AAAAA$' "$OUTDIR"/"$index"_5primetrimmed_trimmed.fastq  | sed '/^--$/d' > "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads.fastq  2>"$LOG"/stderr_"$index".txt
 	polyAreads=$(cat "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads.fastq | echo $((`wc -l`/4)))
 	echo readd withs polyA "$polyAreads"  >>"$LOG"/stdo_"$index".txt
 	echo remove the polyAs at the end of polyA reads >>"$LOG"/stdo_"$index".txt
 	
-	#echo this is done using cutadapat. At this step we also perform a size filteirng of minimum 18 nucleotides >>"$LOG"/stdo_"$index".txt
+	echo this is done using cutadapat. At this step we also perform a size filteirng of minimum 18 nucleotides >>"$LOG"/stdo_"$index".txt
+	
 	#cut super long polyA to avoid internal polyA cutting of 5 or more As
-	###### cutadapt --no-indels -m 18 -e 0 -a "A{1000}"  -o "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved.fastq  "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads.fastq 1>>"$LOG"/stdo_"$index".txt 2>"$LOG"/stderr_"$index".txt
+	cutadapt --no-indels -m 18 -e 0 -a "A{1000}"  -o "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved.fastq  "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads.fastq 1>>"$LOG"/stdo_"$index".txt 2>"$LOG"/stderr_"$index".txt
 	finalReads=$(cat "$OUTDIR"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved.fastq | echo $((`wc -l`/4)))
 	echo final reads after size filtering "$finalReads"  >>"$LOG"/stdo_"$index".txt
 
@@ -213,11 +253,11 @@ while read index; do
 	echo the pre processing before mapping has been completed.  >>"$LOG"/stdo_"$index".txt
 
 
-	echo initialFile:"$initialrReads"  >>"$LOG"/stdo_"$index".txt
-	echo adapterTrimmed:"$adapterTrimming"  >>"$LOG"/stdo_"$index".txt
-	echo fivePrimeTrimming:"$fivePrimeTrimmed"  >>"$LOG"/stdo_"$index".txt
-	echo polyAcontaining:"$polyAreads"  >>"$LOG"/stdo_"$index".txt
-	echo finalFile:"$finalReads"  >>"$LOG"/stdo_"$index".txt
+
+
+
+
+
 
 
 	#################
@@ -230,21 +270,22 @@ while read index; do
 	
 
 	###### mapping the data 	
-		
+		module load python/2.7.13-foss-2017a
 		export PYTHONNOUSERSITE=1
 		 source activate slamdunk0.3.3
 
-		#slamdunk map -r $genome -o $QUANT_MAP/ -n 100 -5 0 -a 0 -e "$QUANT_ALIGN"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved.fastq
-		#slamdunk filter -o $QUANT_MAP -mq 0 -mi 0.95  $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam         
+		slamdunk map -r $genome -o $QUANT_MAP/ -n 100 -5 0 -a 0 -t 7 -e "$QUANT_ALIGN"/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved.fastq
+		slamdunk filter -o $QUANT_MAP -mq 0 -mi 0.95 -t 7  $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam         
 
 		source deactivate
 	
-		
-		 #bedtools bamtobed -i $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam   > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed 
+	module load  bedtools/2.25.0-foss-2017a
 
-		 #awk -vFS="\t" '$6 == "-"' $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed_minusStrand.bed
+	 bedtools bamtobed -i $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam   > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed 
+
+		 awk -vFS="\t" '$6 == "-"' $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed_minusStrand.bed
 		  
-		  # awk -vFS="\t" '$6 == "+"' $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed_plusStrand.bed
+		  awk -vFS="\t" '$6 == "+"' $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed.bed > $QUANT_MAP/"$index"_5primetrimmed_trimmed_sizefiltered_polyAreads_polyAremoved_slamdunk_mapped.bam_bamTobed_plusStrand.bed
 
 
 
@@ -261,7 +302,7 @@ while read index; do
 
 #################### identification of priming sites... 
 
-
+module load  bedtools/2.25.0-foss-2017a
 
 cat $QUANT_MAP/*_bamTobed_minusStrand.bed | awk -vFS="\t" '{print $1,$2}'  | sort | uniq -c | perl -pe 's#^\s+##'  > $QUANT_MAP/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_minusStrand_countsUnique.bed
 cat $QUANT_MAP/*_bamTobed_plusStrand.bed | awk  -vFS="\t" '{print $1,$3}' | sort | uniq -c | perl -pe 's#^\s+##' > $QUANT_MAP/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_plusStrand_countsUnique.bed
@@ -281,6 +322,7 @@ awk -vT=$threshold '{ if ($1 >=T) print  }' "$QUANT_MAP"/polyAreads_polyAremoved
 
 
 awk -vOFS="\t" '{print $2, $3-1, $3, $1}' $QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_plusStrand_countsUnique_greaterThan"$threshold".bed" | sort -k1,1 -k2,2n  > "$QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_plusStrand_countsUnique_greaterThan"$threshold".bed_sorted.bed_changedCoordinates.bed
+
 awk -vOFS="\t" '{print $2, $3, $3+1, $1}' $QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_minusStrand_countsUnique_greaterThan"$threshold".bed" | sort -k1,1 -k2,2n  > "$QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_minusStrand_countsUnique_greaterThan"$threshold".bed_sorted.bed_changedCoordinates.bed
 
 
@@ -298,9 +340,9 @@ bedtools merge  -d 0  -i "$QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_ma
 
 Rscript  --vanilla $PIPELINE/primingSites/overlappingPolyApeaks.R "$QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_plusStrand_countsUnique_greaterThan"$threshold".bed_sorted_merged.bed "$QUANT_MAP"/polyAreads_polyAremoved_pooled_slamdunk_mapped_filtered_bamTobed_minusStrand_countsUnique_greaterThan"$threshold".bed_sorted_merged.bed "$QUANT_MAP"/peaks_"$threshold"_120bps.bed 
 
+module load  bedtools/2.25.0-foss-2017a
 
-
-bedtools getfasta -s -fi $genome -bed "$QUANT_MAP"/peaks_"$threshold"_120bps.bed > "$QUANT_MAP"/peaks_"$threshold"_120bps.fa
+bedtools getfasta -s -fi $genome -bed "$QUANT_MAP"/peaks_"$threshold"_120bps.bed -fo "$QUANT_MAP"/peaks_"$threshold"_120bps.fa 2>"$LOG"/stderr_"$index".txt 
 
 #### getting sequences in the 120 nucleotide window
 
@@ -311,19 +353,59 @@ Rscript --vanilla -e "InPath='$QUANT_MAP';threshold="$threshold";source('$rmd')"
 #### creating nucleotie profile plots...
 
 
+rmd="$PIPELINE/OverlappingPrimingSitesWithAnnotations/nucleotideProfiles_markdown.new.R"
 
-#############3
-
-
-
+Rscript --slave -e "PPath='$PIPELINE'; InPath='$QUANT_MAP'; OutPath='$QUANT_PASPLOTS'; ucscDir='$ucscdir'; ensemblDir='$ensembldir';source('$rmd')"
 
 
-
-
-
+############# #######
+#### addin intergenic peak information 
+######################
 
 
 
+	if [ -d "$ivalue"/rnaseq/ ]; then
+	 
+		echo "using the RNAseq samples in the folder "$ivalue"/rnaseq/ "  
+	fi
+
+
+	if [ ! -d "$ivalue"/rnaseq/ ]; then
+	
+		echo "the rnaseq directory does not exist. Please check if it is named rnaseq."
+	fi
+
+
+	rmd="$PIPELINE/intergenicPeaks/getLongestUTR.R"
+	
+	Rscript --slave -e "PPath='$PIPELINE'; InPath='$QUANT_MAP'; OutPath='$QUANT_INTERGENIC'; ucscDir='$ucscdir'; ensemblDir='$ensembldir';source('$rmd')"
+
+
+	source $PIPELINE/intergenicPeaks/getClosestGene.sh
+
+	## adding intergenic peaks
+
+	module load  bedtools/2.25.0-foss-2017a
+
+	 Rscript --vanilla -e "BIn='$ivalue'; BOut='$ovalue'; ucscDir='$ucscdir'; ensemblDir='$ensembldir'; mode='$RNAseqMode' ; source('$PIPELINE/intergenicPeaks/addingIntergenicPeaks.R')"
+
+
+
+
+
+######################## final filtering steps
+
+	rmd="$PIPELINE/90PercentFiltering_merging_countingWindows/assignToUTRs.R"
+	Rscript --slave -e "BIn='$ivalue'; BOut='$ovalue'; ucscDir='$ucscdir'; ensemblDir='$ensembl';source('$rmd')"
+
+
+
+
+	rmd="$PIPELINE/90PercentFiltering_merging_countingWindows/90PercentFiltering.R"
+
+	Rscript --slave -e "BIn='$ivalue'; BOut='$ovalue'; ucscDir='$ucscdir'; ensemblDir='$ensembldir';source('$rmd')"
+
+	Rscript --vanilla -e "BIn='$ivalue'; BOut='$ovalue'; ucscDir='$ucscdir'; ensemblDir='$ensembldir'; source('$PIPELINE/90PercentFiltering_merging_countingWindows/mergingCounting.new.R')"
 
 
 
@@ -336,9 +418,14 @@ Rscript --vanilla -e "InPath='$QUANT_MAP';threshold="$threshold";source('$rmd')"
 
 
 
+######### transferring the data to the input folgrt
 
 
 
+#find $ovalue* | egrep ".bed$" | egrep -v "final90percent" | xargs -P 1 gzip
+
+#mkdir /groups/ameres/Pooja/Projects/zebrafishAnnotation/sequencingRun_december2017/analysis/annotation/stageSpecific/outputs/$Condition/
+#rsync -rva  --exclude "*.bam" --exclude "*.fastq" --exclude "*.fq" $ovalue/* /groups/ameres/Pooja/Projects/zebrafishAnnotation/sequencingRun_december2017/analysis/annotation/stageSpecific/outputs/$Condition/  
 
 
 
