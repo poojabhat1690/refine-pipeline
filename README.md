@@ -12,11 +12,12 @@ The following dependencies that have to be installed.
 			1. cutadapt
 			2. bedtools
 			3. python
-			4. R
+			4. R - above version 3.4 
 
 ## Quickstart
 
-Please make sure to download annotations and format them before running this script. 
+Please make sure to download annotations and format them before running this script. Steps to obtaining an formatting the annotation can be found below. 
+
 The script required to run the whole pipeline is beforeMapping.new.sh
 
 beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g [genome file] -t [threshold for priming sites]
@@ -41,9 +42,10 @@ beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g 
  
  
  1. Annotations from refSeq, downloaded from the UCSC table browser. 
+
+	
  
- 
- As an example, taking the mm10 annotation (the refSeq annotations were downloaded manually and processed) : File name: getAnnotations.Rmd
+	 As an example, taking the mm10 annotation (the refSeq annotations were downloaded manually and processed) : File name: getAnnotations.Rmd
     for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
     
             1. Form UCSC table browser, select:
@@ -104,7 +106,7 @@ processing ensembl annotations
 2. get protein coding genes with annotated 3' UTRs : proteinCoding_annotatedUTRs.txt
 3. protein coding genes with un annotated 3' UTRs : proteinCoding_UnannotatedUTRs.txt
 	
-
+An example of the annotations required are provided in testdata/dr11. As of now 3' GAmES works with ensembl and refSeq annotations.
  
 ## Output description
 The ouput and all intermediate files are organized in the follwing folders:
