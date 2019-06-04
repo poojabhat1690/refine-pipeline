@@ -1,5 +1,7 @@
 # 3' GAmES 
 3' GAmES is a pipeline to refine and extend mRNA 3' end annotations using 3' end sequencing datasets. The details of the pipeline are in the figure below. 
+![Flowchart 3'GAmES](flowchart.pdf)
+
 
 ## Installation
 
