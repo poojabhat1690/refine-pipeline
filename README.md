@@ -1,5 +1,6 @@
 # 3' GAmES 
-3' GAmES is a pipeline to refine and extend mRNA 3' end annotations using 3' end sequencing datasets. 
+3' GAmES is a pipeline to refine and extend mRNA 3' end annotations using 3' end sequencing datasets. The details of the pipeline are in the figure below. 
+
 ## Installation
 
 Clone from github
@@ -7,10 +8,11 @@ git clone https://github.com/poojabhat1690/refine-pipeline.git
 cd pipeline/pre-processing/
 
 The following dependencies that have to be installed. 
-			1. cutadapt
-			2. bedtools
-			3. python
-			4. R - above version 3.4 
+
+1. cutadapt
+2. bedtools
+3. python
+4. R - above version 3.4 
 
 ## Quickstart
 
