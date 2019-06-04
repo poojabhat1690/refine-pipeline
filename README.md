@@ -5,16 +5,31 @@
 
 ## Installation
 
-Clone from github
+#### Clone from github
+
 git clone https://github.com/poojabhat1690/refine-pipeline.git
 cd pipeline/pre-processing/
 
-The following dependencies that have to be installed. 
+#### Dependencies
 
 1. cutadapt
 2. bedtools
 3. python
 4. R - above version 3.4 
+  
+ 	 ggplot2
+	 
+	 reshape2
+	 
+	 reshape
+	 
+	 checkmate
+	 
+	 GenomicRanges
+	 
+	 Biostrings
+	 
+
 
 ## Quickstart
 
