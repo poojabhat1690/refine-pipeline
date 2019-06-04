@@ -92,12 +92,9 @@ The ouput and all intermediate files are organized in the follwing folders:
 #### Main output
 
 final90percent :
-	
-	ends_greater90percent_intergenic_n100 :  contains the high condience mRNA 3' ends 
-	
-	allAnnotations.bed :  250nt counting windows (overlapping counting windows merged), used to count quantSeq reads.
-	
-	countingWindows_transcriptionalOutput.bed : genomic loci to filter multimappers using SLAMdunk. These include all counting windows + all 3' UTRs + all extended counting windows. 
+ 1. ends_greater90percent_intergenic_n100 :  contains the high condience mRNA 3' ends 
+ 2. allAnnotations.bed :  250nt counting windows (overlapping counting windows merged), used to count quantSeq reads.
+ 3. countingWindows_transcriptionalOutput.bed : genomic loci to filter multimappers using SLAMdunk. These include all counting windows + all 3' UTRs + all extended counting windows. 
 	
 	onlyIntergenic_90percent_n100: list of the intergenic counting windows created using presence of continuous RNAseq signal.
 
