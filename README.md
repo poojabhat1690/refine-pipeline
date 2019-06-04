@@ -1,7 +1,5 @@
-# Annotation pipeline
-
-This is a set of scripts used to refine and extend existing mRNA 3' end annotations using Quant seq 3' end sequencing 	 (https://www.nature.com/articles/nmeth.f.376) and RNAseq. 
-
+# 3' GAmES 
+3' GAmES is a pipeline to refine and extend mRNA 3' end annotations using 3' end sequencing datasets. 
 ## Installation
 
 Clone from github
