@@ -33,7 +33,7 @@ cd pipeline/pre-processing/
 
 ## Quickstart
 
-Please make sure to download annotations and format them before running this script. Steps to obtaining an formatting the annotation can be found below. 
+Please make sure to download annotations and format them before running this script (examples for annotations for mouse version mm10 and zebrafish version dr11 are here : ). Steps to obtaining an formatting the annotation for your favourite organism can be found below. 
 
 The script required to run the whole pipeline is beforeMapping.new.sh
 
@@ -42,15 +42,22 @@ beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g 
  
  
  -a 3' adapter sequences that has to be removed using cutadapt
+ 
  -i input directory containing two folders named - quantseq, rnaseq
                    quantseq: contains *.fastq, *.fq.gz, *fq  files. 
                    rnaseq: mapped, sorted and indexed bam files. 
+ 
  -o Output directory
+ 
  -t threshold of the number of reads to define a priming site.
+ 
  -u ucsc directory containing annotations downloaded from ucsc table browser. 
+ 
  -e ensembl directory containing ensembl annotations ontained from biomart. 
+ 
  -m mode of counting for RNAseq coverage, derived from bedtools multicov (s: counting on the same strand, 
             p: paired end reads, S: counting on the opposite strand
+ 
  -c condition of sample (example: timepoint or organism)
                 
            
@@ -64,8 +71,7 @@ beforeMapping.new.sh -a [adapter] -i [input directory] -o [output directory] -g 
  
 	 As an example, taking the mm10 annotation (the refSeq annotations were downloaded manually and processed) : File name: getAnnotations.Rmd
     for 3' UTR annotations from UCSC genome browser (refSeq_mm10_3primeUTR.bed) 
-    
-            1. Form UCSC table browser, select:
+    	     1. Form UCSC table browser, select:
                 a. clade = mammal 
                 b. genome = mouse
                 c. assembly = Dec. 2011 (GRCm38/mm10)
