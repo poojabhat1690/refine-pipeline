@@ -1,11 +1,53 @@
 #! /usr/bin/ Rscript
 args = commandArgs(trailingOnly=T)
-require(ggplot2)
-require(reshape)
-require(plyr)
-require(dplyr)
+if(require("ggplot2")){
+  print("ggplot2 is loaded correctly")
+} else {
+  print("trying to install ggplot2")
+  install.packages("ggplot2")
+  if(require(ggplot2)){
+    print("ggplot2 installed and loaded")
+  } else {
+    stop("could not install ggplot2")
+  }
+}
+
+if(require("reshape")){
+  print("reshape is loaded correctly")
+} else {
+  print("trying to install reshape")
+  install.packages("reshape")
+  if(require(reshape)){
+    print("reshape installed and loaded")
+  } else {
+    stop("could not install reshape")
+  }
+}
+
+if(require("plyr")){
+  print("plyr is loaded correctly")
+} else {
+  print("trying to install plyr")
+  install.packages("plyr")
+  if(require(plyr)){
+    print("plyr installed and loaded")
+  } else {
+    stop("could not install plyr")
+  }
+}
 
 
+if(require("dplyr")){
+  print("dplyr is loaded correctly")
+} else {
+  print("trying to install dplyr")
+  install.packages("dplyr")
+  if(require(dplyr)){
+    print("dplyr installed and loaded")
+  } else {
+    stop("could not install dplyr")
+  }
+}
 
 library(ggplot2)
 library(reshape)
